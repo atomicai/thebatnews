@@ -1,0 +1,7 @@
+transformers==4.33.2
+polars==0.17.3
+XlsxWriter==3.1.3
+xlsx2csv==0.8.1
+emoji==2.8.0
+pandas==1.5.3
+torch==2.0.1+cu118
