@@ -2,6 +2,9 @@ import logging
 import os
 import pathlib
 
+from gevent import monkey
+monkey.patch_all()
+
 import dotenv
 from flask import Flask, send_from_directory
 
@@ -28,7 +31,7 @@ app = Flask(
     __name__,
     template_folder="build",
     static_folder="build",
-    root_path=pathlib.Path(os.getcwd()) / "patronus",
+    root_path=pathlib.Path(os.getcwd()) / "thebatnews",
 )
 app.secret_key = "thebatcave"
 app.config["SESSION_TYPE"] = "filesystem"
