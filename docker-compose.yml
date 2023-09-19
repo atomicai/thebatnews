@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  thebatnews:
+    container_name: thebatnews
+    image: thebatnews
+    platform: linux/amd64
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - 4321:4321
