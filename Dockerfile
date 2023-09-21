@@ -23,7 +23,6 @@ FROM ubuntu:${UBUNTU_VER}
 # System packages 
 RUN apt-get update && apt-get install -yq curl wget jq vim
 
-
 # Use the above args during building https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
 ARG CONDA_VER
 ARG OS_TYPE
@@ -54,7 +53,6 @@ WORKDIR /thebatnews
 COPY ./thebatnews/ thebatnews
 COPY makefile makefile
 COPY ./requirements.txt requirements.txt
-
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 ENV WORKERS_PER_CORE=3

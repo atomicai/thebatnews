@@ -1,4 +1,4 @@
-LINE_WIDTH=129
+LINE_WIDTH=132
 NAME := $(shell python setup.py --name)
 UNAME := $(shell uname -s)
 ISORT_FLAGS=--line-width=${LINE_WIDTH} --profile black
@@ -28,7 +28,7 @@ format-fix:
 	autoflake ${FLAKE_FLAGS} ${NAME} thebatnews test
 
 run:
-	flask run --host=0.0.0.0 --port=7777
+	gunicorn -k gevent -w 4 -b 127.0.0.1:4321 thebatnews.tdk.rise:app
 
 test:
 	pytest test ${PYTEST_FLAGS} --testmon --suppress-no-test-exit-code
