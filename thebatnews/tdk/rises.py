@@ -49,3 +49,5 @@ def index(path):
 
 
 app.add_url_rule("/searching", methods=["POST"], view_func=prime.search)
+app.add_url_rule("/uploading", methods=["POST"], view_func=prime.upload)
+app.add_url_rule("/iloading", methods=["POST"], view_func=prime.rock_n_roll)
