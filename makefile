@@ -6,7 +6,7 @@ FLAKE_FLAGS=--remove-unused-variables --ignore-init-module-imports --recursive
 # "" is for multi-lang strings (comments, logs), '' is for everything else.
 BLACK_FLAGS=--skip-string-normalization --line-length=${LINE_WIDTH}
 PYTEST_FLAGS=-p no:warnings
-export FLASK_APP=thebatnews.tdk.rise
+export FLASK_APP=thebatnews.tdk.rises
 
 install:
 	pip install -e '.[all]'
@@ -18,17 +18,17 @@ setup-pre-commit:
 	pre-commit run --all-files
 
 format:
-	isort ${ISORT_FLAGS} --check-only --diff ${NAME} thebatnews test
-	black ${BLACK_FLAGS} --check --diff ${NAME} thebatnews test
-	autoflake ${FLAKE_FLAGS} --in-place ${NAME} thebatnews test
+	isort ${ISORT_FLAGS} --check-only --diff ${NAME} thebatnews tests
+	black ${BLACK_FLAGS} --check --diff ${NAME} thebatnews tests
+	autoflake ${FLAKE_FLAGS} --in-place ${NAME} thebatnews tests
 
 format-fix:
-	isort ${ISORT_FLAGS} ${NAME} thebatnews test
-	black ${BLACK_FLAGS} ${NAME} thebatnews test
-	autoflake ${FLAKE_FLAGS} ${NAME} thebatnews test
+	isort ${ISORT_FLAGS} ${NAME} thebatnews tests
+	black ${BLACK_FLAGS} ${NAME} thebatnews tests
+	autoflake ${FLAKE_FLAGS} ${NAME} thebatnews tests
 
 run:
-	gunicorn -k gevent -w 4 -b 127.0.0.1:4321 thebatnews.tdk.rise:app
+	gunicorn -k gevent -w 4 -b 127.0.0.1:4321 thebatnews.tdk.rises:app
 
 test:
 	pytest test ${PYTEST_FLAGS} --testmon --suppress-no-test-exit-code
