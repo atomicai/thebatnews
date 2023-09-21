@@ -44,7 +44,6 @@ RUN conda --version
 # RUN echo "conda activate prime" >> ~/.bashrc
 # SHELL ["/bin/bash", "--login", "-c"]
 
-RUN conda install -c conda-forge graph-tool
 RUN apt-get update -y
 RUN apt-get install -y --no-install-recommends apt-utils build-essential sudo git
 RUN useradd -m docker && echo "docker:docker" | chpasswd && adduser docker sudo
@@ -53,6 +52,7 @@ WORKDIR /thebatnews
 COPY ./thebatnews/ thebatnews
 COPY makefile makefile
 COPY ./requirements.txt requirements.txt
+COPY ./weights/ weights
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 ENV WORKERS_PER_CORE=3
