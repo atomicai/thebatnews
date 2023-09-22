@@ -13,12 +13,12 @@
 #   tf-mkl vers: https://anaconda.org/anaconda/tensorflow-mkl/files
 #
 
-ARG UBUNTU_VER=22.04
+# ARG UBUNTU_VER=22.04
 ARG CONDA_VER=latest
 ARG OS_TYPE=x86_64
 ARG PY_VER=3.10
 
-FROM ubuntu:${UBUNTU_VER}
+FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04
 
 # System packages 
 RUN apt-get update && apt-get install -yq curl wget jq vim
