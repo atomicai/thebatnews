@@ -1,18 +1,23 @@
 import simplejson as json
 import logging
+from pathlib import Path
 import os
-from flask import jsonify, request, session
+from flask import jsonify, request, session, send_file
 from werkzeug.utils import secure_filename
 from pathlib import Path
 import polars as pl
 import uuid
-import pyarrow.parquet as pq
+# import pyarrow.parquet as pq
 import random_name
 from icecream import ic
+from more_itertools import chunked
+from thebatnews.running import INFRunner
 
 logger = logging.getLogger(__name__)
 
 cache_dir = Path(os.getcwd()) / ".cache"
+
+runner = INFRunner.load(Path(os.getcwd()) / "weights", gpu=True)
 
 
 def search():
@@ -22,6 +27,7 @@ def search():
 
 
 def upload():
+    global runner
     response = {}
     logger.info("welcome to upload`")
     xf = request.files["file"]
@@ -40,47 +46,39 @@ def upload():
     fname, fpath = Path(filename), Path(destination)
     df, columns = None, None
     is_suffix_ok, is_file_corrupted = True, False
-    if fpath.suffix not in (".xlsx", ".csv"):
+    if fpath.suffix not in (".xlsx", ".excel", ".csv"):
         is_suffix_ok = False
     else:
         try:
             xf.save(str(destination))
-            if fpath.suffix in (".xlsx"):
+            if fpath.suffix in (".xlsx", ".excel"):
                 df = pl.read_excel(destination)
             else:
                 df = pl.read_csv(destination)
-            # df = next(
-            #     get_data(
-            #         data_dir=cache_dir / uid,
-            #         filename=fname.stem,
-            #         ext=fname.suffix,
-            #         engine="polars",
-            #     )
-            # )
         except:
             is_file_corrupted = True
         else:
             is_file_corrupted = False
 
     if is_suffix_ok and not is_file_corrupted:  # is suffix_ok is also false
-        columns = [str(_) for _ in list(df.columns)]
-        arr = df.to_arrow()
-        pq.write_table(arr, cache_dir / str(uid) / f"{fname.stem}.parquet")
-        session["filename"] = filename
-        response["filename"] = filename
-        response["text_columns"] = columns
-        response["datetime_columns"] = columns
-    elif is_suffix_ok:
-        msg = "There are some technical issues processing file. Please make sure the file is not corrupted"
-        response["error"] = msg
-        ic(msg)
-    else:
-        msg = f"The file format {fname.suffix} is not yet supported. The supported file formats are \".csv\" and \".xlsx\""
-        response["error"] = msg
-        ic(msg)
-    response["is_suffix_ok"] = is_suffix_ok
-    response["is_file_corrupted"] = is_file_corrupted
-    return response
+        docs = df.select("text").to_series().to_list()
+        channel_id = df.select("channel_id").to_series().to_list()
+        response = []
+        for chunk in chunked(docs, n=256):
+            _docs = [{"text": t} for t in chunk]
+            labels = []
+            for ans in runner.inference_from_dicts(_docs):
+                for label in ans["predictions"]:
+                    labels.append(label["label"])
+            response.extend(labels)
+        final_docs =[{"text": _d, "label": _l, "channel_id": _ch} for _d, _l, _ch in zip(docs, response, channel_id)]
+        
+        arr = pl.from_dicts(final_docs)
+        
+        fname = Path(Path(filename).stem + ".csv")
+        destination = cache_dir / str(uid) / str(fname)
+        arr.write_csv(fname)
+        return send_file(str(destination), as_attachment=True)
 
 
 def rock_n_roll():

@@ -3,6 +3,7 @@ import os
 import pathlib
 
 from gevent import monkey
+
 monkey.patch_all()
 
 import dotenv
@@ -10,6 +11,9 @@ from flask import Flask, send_from_directory
 
 from flask_session import Session
 from thebatnews.tdk import prime
+
+# from thebatnews.running import INFRunner
+# from functools import partial
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
@@ -23,7 +27,6 @@ dotenv.load_dotenv()
 
 top_k = int(os.environ.get("TOP_K", 5))
 index = os.environ.get("INDEX", "document")
-# store = MemoDocStore(index=index)  # This will change to "as service"
 cache_dir = pathlib.Path(os.getcwd()) / ".cache"
 
 app = Flask(
@@ -36,7 +39,13 @@ app.secret_key = "thebatcave"
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+# runner = INFRunner.load(pathlib.Path(os.getcwd()) / "weights", gpu=True)
+
 logger.info("NEW INSTANCE is created")
+
+
+# with app.app_context():
+#     runner = INFRunner.load(pathlib.Path(os.getcwd()) / "weights", gpu=True)
 
 
 @app.route("/", defaults={"path": ""})
