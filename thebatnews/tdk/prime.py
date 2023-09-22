@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 cache_dir = Path(os.getcwd()) / ".cache"
 
-runner = INFRunner.load(Path(os.getcwd()) / "weights", gpu=True)
+runner = INFRunner.load(Path(os.getcwd()) / "weights", gpu=True, num_processes=0)
 
 
 def search():
