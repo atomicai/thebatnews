@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 cache_dir = Path(os.getcwd()) / ".cache"
 
-runner = INFRunner.load(Path(os.getcwd()) / "weights", gpu=True, num_processes=0)
+runner = INFRunner.load(Path(os.getcwd()) / "weights", gpu=True, num_processes=0, batch_size=16)
 
 
 def search():
@@ -64,7 +64,7 @@ def upload():
         docs = df.select("text").to_series().to_list()
         channel_id = df.select("channel_id").to_series().to_list()
         response = []
-        for chunk in chunked(docs, n=256):
+        for chunk in chunked(docs, n=1024):
             _docs = [{"text": t} for t in chunk]
             labels = []
             for ans in runner.inference_from_dicts(_docs):
