@@ -1,15 +1,13 @@
 {
   "files": {
-    "main.css": "/static/css/main.f6a50a8b.css",
-    "main.js": "/static/js/main.5d093e6f.js",
-    "static/media/gotham_medium.otf": "/static/media/gotham_medium.a52599fa8cce74bab773.otf",
-    "static/media/cyberpunk.ttf": "/static/media/cyberpunk.4b5fd400e07daaf77a9b.ttf",
+    "main.css": "/static/css/main.33d7cbe4.css",
+    "main.js": "/static/js/main.fe15f797.js",
     "index.html": "/index.html",
-    "main.f6a50a8b.css.map": "/static/css/main.f6a50a8b.css.map",
-    "main.5d093e6f.js.map": "/static/js/main.5d093e6f.js.map"
+    "main.33d7cbe4.css.map": "/static/css/main.33d7cbe4.css.map",
+    "main.fe15f797.js.map": "/static/js/main.fe15f797.js.map"
   },
   "entrypoints": [
-    "static/css/main.f6a50a8b.css",
-    "static/js/main.5d093e6f.js"
+    "static/css/main.33d7cbe4.css",
+    "static/js/main.fe15f797.js"
   ]
 }
