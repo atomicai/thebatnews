@@ -28,7 +28,7 @@ format-fix:
 	autoflake ${FLAKE_FLAGS} ${NAME} thebatnews tests
 
 run:
-	gunicorn -k gevent -w 4 -b 127.0.0.1:4321 thebatnews.tdk.rises:app
+	flask run --host=0.0.0.0 --port=4321
 
 test:
 	pytest test ${PYTEST_FLAGS} --testmon --suppress-no-test-exit-code
